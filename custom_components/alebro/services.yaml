@@ -1,0 +1,60 @@
+print_label:
+  name: Print label
+  description: Print a label on the Alebro label printer
+  fields:
+    text:
+      name: Label text
+      description: The text to print on the label
+      required: true
+      example: "Hello World"
+      selector:
+        text:
+          multiline: false
+    template:
+      name: Template
+      description: Label template name to use
+      required: false
+      default: "default"
+      example: "default"
+      selector:
+        text:
+    font_size:
+      name: Font size
+      description: Font size in points
+      required: false
+      default: 24
+      selector:
+        number:
+          min: 8
+          max: 200
+          step: 1
+          unit_of_measurement: pt
+    bold:
+      name: Bold
+      description: Make text bold
+      required: false
+      default: false
+      selector:
+        boolean:
+    quantity:
+      name: Quantity
+      description: Number of copies to print
+      required: false
+      default: 1
+      selector:
+        number:
+          min: 1
+          max: 100
+          step: 1
+    image:
+      name: Image URL
+      description: URL or path to an image to include on the label
+      required: false
+      example: "https://example.com/logo.png"
+      selector:
+        text:
+
+cancel_print:
+  name: Cancel print
+  description: Cancel the current print job
+  fields: {}

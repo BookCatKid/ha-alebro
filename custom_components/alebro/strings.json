@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Alebro Label Printer",
+        "description": "Connect your Alebro label printer via MQTT. Your printer bridge subscribes to `{print_topic}` and publishes status to `{resp_topic}`.",
+        "data": {
+          "printer_name": "Printer Name",
+          "web_ui_url": "Web Interface URL",
+          "print_topic": "MQTT Print Topic",
+          "resp_topic": "MQTT Status Topic"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect, check your MQTT settings",
+      "invalid_url": "The web UI URL is not valid",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This printer name is already configured"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "ready": "Ready",
+          "printing": "Printing",
+          "error": "Error",
+          "offline": "Offline"
+        }
+      }
+    },
+    "button": {
+      "open_web_ui": {
+        "name": "Open Web UI"
+      },
+      "print_test": {
+        "name": "Print Test Label"
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Alebro Label Printer",
+        "description": "Connect your Alebro label printer via MQTT. Your printer bridge subscribes to `{print_topic}` and publishes status to `{resp_topic}`.",
+        "data": {
+          "printer_name": "Printer Name",
+          "web_ui_url": "Web Interface URL",
+          "print_topic": "MQTT Print Topic",
+          "resp_topic": "MQTT Status Topic"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect, check your MQTT settings",
+      "invalid_url": "The web UI URL is not valid",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This printer name is already configured"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "ready": "Ready",
+          "printing": "Printing",
+          "error": "Error",
+          "offline": "Offline"
+        }
+      }
+    },
+    "button": {
+      "open_web_ui": {
+        "name": "Open Web UI"
+      },
+      "print_test": {
+        "name": "Print Test Label"
+      }
+    }
+  },
+  "services": {
+    "print_label": {
+      "name": "Print label",
+      "description": "Print a label on the Alebro label printer",
+      "fields": {
+        "text": {
+          "name": "Label text",
+          "description": "The text to print on the label"
+        },
+        "template": {
+          "name": "Template",
+          "description": "Label template name to use"
+        },
+        "font_size": {
+          "name": "Font size",
+          "description": "Font size in points"
+        },
+        "bold": {
+          "name": "Bold",
+          "description": "Make text bold"
+        },
+        "quantity": {
+          "name": "Quantity",
+          "description": "Number of copies to print"
+        },
+        "image": {
+          "name": "Image URL",
+          "description": "URL or path to an image to include on the label"
+        }
+      }
+    },
+    "cancel_print": {
+      "name": "Cancel print",
+      "description": "Cancel the current print job"
+    }
+  }
+}
