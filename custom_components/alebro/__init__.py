@@ -2,6 +2,7 @@ import json
 import logging
 from pathlib import Path
 
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.components.mqtt import async_subscribe, async_publish
 from homeassistant.const import Platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -45,7 +46,9 @@ async def async_setup_entry(hass, entry):
     hass.data[DOMAIN]["entries"][entry.entry_id] = config
 
     card_path = str(Path(__file__).parent / "www" / "alebro-label-card.js")
-    hass.http.register_static_path(URL_CARD, card_path, cache_headers=False)
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(URL_CARD, card_path, cache_headers=False)]
+    )
 
     async def async_status_message(msg):
         payload = msg.payload
