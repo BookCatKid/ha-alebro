@@ -1,6 +1,7 @@
 import json
 import logging
 
+from homeassistant.components.mqtt import async_subscribe, async_publish
 from homeassistant.const import Platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
@@ -70,8 +71,8 @@ async def async_setup_entry(hass, entry):
             hass, f"{SIGNAL_STATUS_UPDATE}_{entry.entry_id}", dispatcher_data
         )
 
-    unsub = await hass.components.mqtt.async_subscribe(
-        config[CONF_RESP_TOPIC], async_status_message
+    unsub = await async_subscribe(
+        hass, config[CONF_RESP_TOPIC], async_status_message
     )
     hass.data[DOMAIN]["unsubs"][entry.entry_id] = unsub
 
@@ -92,8 +93,8 @@ async def async_setup_entry(hass, entry):
             if image := call.data.get("image"):
                 payload["image"] = image
 
-            await hass.components.mqtt.async_publish(
-                cfg[CONF_PRINT_TOPIC], json.dumps(payload)
+            await async_publish(
+                hass, cfg[CONF_PRINT_TOPIC], json.dumps(payload)
             )
             async_dispatcher_send(
                 hass, f"{SIGNAL_STATUS_UPDATE}_{eid}", {"state": STATE_PRINTING}
@@ -101,9 +102,8 @@ async def async_setup_entry(hass, entry):
 
     async def async_handle_cancel_print(call):
         for eid, cfg in hass.data[DOMAIN]["entries"].items():
-            await hass.components.mqtt.async_publish(
-                cfg[CONF_PRINT_TOPIC],
-                json.dumps({"command": "cancel"}),
+            await async_publish(
+                hass, cfg[CONF_PRINT_TOPIC], json.dumps({"command": "cancel"}),
             )
 
     if not hass.data.get(SERVICES_REGISTERED_KEY):
