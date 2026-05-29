@@ -17,18 +17,27 @@ A [Home Assistant](https://www.home-assistant.io/) integration for printing labe
 
 ## Installation
 
-### HACS (recommended)
+### HACS — Integration
 
 1. Open HACS → Integrations → Custom Repositories
-2. Add `https://github.com/BookCatKid/ha-alebro` as type "Integration"
-3. Click "Download" on the Alebro Label Printer integration
-4. Restart Home Assistant
+2. Add `https://github.com/BookCatKid/ha-alebro` as type **Integration**
+3. Click "Download" → Restart Home Assistant
+4. Go to Settings → Devices & Services → Add "Alebro Label Printer"
+
+### HACS — Lovelace Card
+
+The card is bundled with the integration but must be added as a **dashboard resource** separately:
+
+1. Open HACS → Frontend → Custom Repositories
+2. Add `https://github.com/BookCatKid/ha-alebro` as type **Dashboard**
+3. Click "Download" → Refresh your dashboard
+4. Or manually: Settings → Dashboards → Resources → Add Resource → `/local/alebro-label-card.js` (type: JavaScript Module)
 
 ### Manual
 
-1. Copy `custom_components/alebro/` to your Home Assistant `custom_components/` directory
-2. Copy `www/alebro-label-card.js` to your Home Assistant `www/` directory
-3. Restart Home Assistant
+1. Copy `custom_components/alebro/` → `custom_components/`
+2. Copy `www/alebro-label-card.js` → `www/`
+3. Restart HA, then add the resource in Settings → Dashboards → Resources
 
 ## Setup
 
