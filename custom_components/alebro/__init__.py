@@ -18,18 +18,13 @@ from .const import (
     SERVICE_CANCEL_PRINT,
     SERVICE_PRINT_LABEL,
     SIGNAL_STATUS_UPDATE,
-    STATE_ERROR,
-    STATE_OFFLINE,
-    STATE_PRINTING,
-    STATE_READY,
 )
-
-URL_CARD = "/alebro/alebro-label-card.js"
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = [Platform.SENSOR, Platform.BUTTON]
 SERVICES_REGISTERED_KEY = f"{DOMAIN}_services"
+URL_CARD = "/alebro/alebro-label-card.js"
 
 
 async def async_setup_entry(hass, entry):
@@ -60,14 +55,14 @@ async def async_setup_entry(hass, entry):
             data = {"status": str(payload)}
 
         raw = data.get("status", "").lower()
-        if raw in ("printing", "busy"):
-            state = STATE_PRINTING
-        elif raw in ("ok", "ready", "done"):
-            state = STATE_READY
-        elif raw.startswith("error") or raw in ("fail", "fault"):
-            state = STATE_ERROR
+        if raw in ("ok", "done"):
+            state = "ready"
+        elif raw.startswith("error"):
+            state = "error"
+        elif raw == "printing":
+            state = "printing"
         else:
-            state = STATE_READY
+            state = raw
 
         dispatcher_data = {
             "state": state,
@@ -94,7 +89,6 @@ async def async_setup_entry(hass, entry):
         for eid, cfg in hass.data[DOMAIN]["entries"].items():
             payload = {
                 "text": text,
-                "template": call.data.get("template", "default"),
                 "font_size": call.data.get("font_size", 24),
                 "bold": call.data.get("bold", False),
                 "quantity": call.data.get("quantity", 1),
@@ -106,7 +100,9 @@ async def async_setup_entry(hass, entry):
                 hass, cfg[CONF_PRINT_TOPIC], json.dumps(payload)
             )
             async_dispatcher_send(
-                hass, f"{SIGNAL_STATUS_UPDATE}_{eid}", {"state": STATE_PRINTING}
+                hass,
+                f"{SIGNAL_STATUS_UPDATE}_{eid}",
+                {"state": "printing", "last_printed_text": text},
             )
 
     async def async_handle_cancel_print(call):

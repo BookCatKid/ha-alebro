@@ -8,11 +8,6 @@ CONF_PRINTER_NAME = "printer_name"
 DEFAULT_PRINT_TOPIC = "alebro/print"
 DEFAULT_RESP_TOPIC = "alebro/status"
 
-STATE_READY = "ready"
-STATE_PRINTING = "printing"
-STATE_ERROR = "error"
-STATE_OFFLINE = "offline"
-
 SERVICE_PRINT_LABEL = "print_label"
 SERVICE_CANCEL_PRINT = "cancel_print"
 

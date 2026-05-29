@@ -14,9 +14,6 @@ from .const import (
     CONF_WEB_UI_URL,
     DOMAIN,
     SIGNAL_STATUS_UPDATE,
-    STATE_OFFLINE,
-    STATE_PRINTING,
-    STATE_READY,
 )
 
 
@@ -37,8 +34,8 @@ class AlebroStatusSensor(SensorEntity):
         self._entry_id = entry_id
         self._config = config
         self._attr_unique_id = f"{entry_id}_status"
-        self._attr_native_value = STATE_OFFLINE
-        self._attr_icon = "mdi:printer-off"
+        self._attr_native_value = None
+        self._attr_icon = "mdi:printer"
         self._last_printed_text: str | None = None
         self._last_printed_at: str | None = None
         self._last_result: str | None = None
@@ -63,33 +60,22 @@ class AlebroStatusSensor(SensorEntity):
             "last_result": self._last_result,
         }
 
-    def _set_state_attrs(self, data: dict[str, Any]) -> None:
-        state = data.get("state")
-        if state == STATE_PRINTING:
-            self._attr_native_value = STATE_PRINTING
-            self._attr_icon = "mdi:printer"
-        elif state == STATE_READY:
-            self._attr_native_value = STATE_READY
-            self._attr_icon = "mdi:printer-check"
-        elif state == "error":
-            self._attr_native_value = "error"
-            self._attr_icon = "mdi:printer-alert"
-        else:
-            self._attr_native_value = STATE_OFFLINE
-            self._attr_icon = "mdi:printer-off"
-
-        if "last_result" in data:
-            self._last_result = data["last_result"]
-        if "last_printed_text" in data:
-            self._last_printed_text = data["last_printed_text"]
-            self._last_printed_at = dt_util.utcnow().isoformat()
-
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
         @callback
         def update(data: dict[str, Any]) -> None:
-            self._set_state_attrs(data)
+            state = data.get("state")
+            if state:
+                self._attr_native_value = state
+                self._attr_icon = "mdi:printer" if state == "printing" else "mdi:printer-check"
+
+            if "last_result" in data:
+                self._last_result = data["last_result"]
+            if "last_printed_text" in data:
+                self._last_printed_text = data["last_printed_text"]
+                self._last_printed_at = dt_util.utcnow().isoformat()
+
             self.async_write_ha_state()
 
         self.async_on_remove(
