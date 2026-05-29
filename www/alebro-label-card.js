@@ -262,7 +262,6 @@ class AlebroLabelCard extends LitElement {
   }
 
   getCardSize() { return 3; }
-  static getConfigElement() { return document.createElement("alebro-label-card-editor"); }
   static getStubConfig() { return { entity: "", sensor_entity: "" }; }
 }
 
